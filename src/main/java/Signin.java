@@ -9,7 +9,7 @@ public class Signin extends PageBase {
     private final By termsandcond = By.xpath("//*[@id=\"terms-and-conditions-button\"]");
     private final By xButton = By.xpath("//*[@id=\"overlay\"]/div/div[1]");
 
-    private final String url = "https://lennertamas.github.io/roxo/";
+    private final String url = "https://lennertamas.github.io/portio/";
     private final By username = By.xpath("//*[@id=\"register-username\"]");
     private final By password = By.xpath("//*[@id=\"register-password\"]");
     private final By email = By.xpath("//*[@id=\"register-email\"]");
@@ -17,6 +17,11 @@ public class Signin extends PageBase {
     private final By registerButton = By.xpath("//*[@id=\"register\"]/form/div[6]/button");
     private final By topRegisterButton = By.xpath("//*[@id=\"register-form-button\"]");
     private final By resultMessage = By.xpath("//*[@id=\"register-alert\"]");
+
+
+
+
+
 
 
     public Signin(WebDriver drv) {

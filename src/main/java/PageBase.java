@@ -3,7 +3,7 @@ import org.openqa.selenium.WebDriver;
 
     public class PageBase {
 
-        WebDriver driver;
+        static WebDriver driver;
 
         public PageBase(WebDriver drv)
         {

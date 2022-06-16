@@ -105,7 +105,9 @@ public class SignInTest {
             Assertions.assertNotSame("User registered!", result);
     }
 
+
 //sign in with the same datas
+    @Test
     public void SignInWithDuplicateData()
     {
 

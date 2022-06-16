@@ -1,12 +1,16 @@
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.apache.hc.core5.util.Asserts;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.util.concurrent.TimeUnit;
 
+import static java.lang.Thread.getDefaultUncaughtExceptionHandler;
 import static java.lang.Thread.sleep;
 
 public class LoginTest {
@@ -14,8 +18,7 @@ public class LoginTest {
     WebDriver driver;
 
     @BeforeEach
-    public void setup()
-    {
+    public void setup() {
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--no-sandbox");
@@ -25,57 +28,105 @@ public class LoginTest {
         //options.addArguments("--headless");
         options.addArguments("--window-size=1920,1080");
         options.addArguments("start-maximized");
+        options.addArguments("--ignore-certificate-errors");
+        //options.addArguments("user-agent="Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)/%22%22);
         driver = new ChromeDriver(options);
         driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
         driver.manage().window().maximize();
+
     }
 
+/*String selectLinkOpeninNewTab = Keys.chord(Keys.CONTROL,Keys.RETURN);
+driver.findElement(By.linkText("www.facebook.com")).sendKeys(selectLinkOpeninNewTab);*/
     //login with valid datas
 
-   @Test
-   public void trybuttonthrows() throws InterruptedException
-   {
-
-       Login login = new Login(driver);
-    Signin signIn = new Signin(driver);
-    popUp pop = new popUp(driver);
-   signIn.navigate();
-   pop.clickOnX();
-
-    signIn.clickOnTopRegisterButton();
-    Thread.sleep(1500);
-    login.clickTopLoginButton();
-
-   }
 
     @Test
     public void validLogin() throws InterruptedException
     {
-     /*   Signin signin = new Signin(driver);
-        signin.navigate();
-        sleep(3000);
-        popUp popUp = new popUp(driver);
-        popUp.clickOnX();
-        signin.clickOnTopRegisterButton();
-        signin.addUsername("username");
-        signin.addPassword("Jelszo01");
-        signin.addEmail("dfsf@ggr.hu");
-        signin.addDescription("-");
-        signin.clickOnRegisterButton();*/
 
-
+        Main main = new Main(driver);
+        main.SignInTest();
 
         Login login = new Login(driver);
-        popUp pop = new popUp(driver);
-        login.navigate();
-        pop.clickOnX();
-      //  login.clickTopLoginButton();
-        login.setUserName("lovasia");
-        login.setPassword("kiscsillag123");
+        LandingPage landingPage = new LandingPage(driver);
+
+        Thread.sleep(3500);
+        login.clickLoginTab();
+        login.setUserName("username");
+        login.setPassword("Jelszo01");
 
         login.clickOnLoginButton();
+        String result = landingPage.getLogOutText();
+
+        Assertions.assertEquals(result, "Logout");
+    }
+    @Test
+    public void inValidLogin() throws InterruptedException {
+
+        Main main = new Main(driver);
+        main.SignInTest();
+
+        Login login = new Login(driver);
+
+
+        Thread.sleep(3500);
+        login.clickLoginTab();
+        login.setUserName("username");
+        login.setPassword("Jelszo00");
+        login.clickOnLoginButton();
+        String result = login.getResult();
+
+        Assertions.assertEquals(result, "Username or Password\n" +
+                "is not correct!");
+
+    }
+    @Test
+    public void MissingDetailsLogin() throws InterruptedException {
+
+        Main main = new Main(driver);
+        main.SignInTest();
+
+        Login login = new Login(driver);
+
+
+        Thread.sleep(3500);
+        login.clickLoginTab();
+        login.setUserName("username");
+        login.setPassword("");
+        login.clickOnLoginButton();
+        String result = login.getResult();
+
+        Assertions.assertEquals(result, "Username or Password\n" +
+                "is not correct!");
 
     }
 
 
-}
+    //Logout test
+    @Test
+
+    public void logout() throws InterruptedException {
+        Main main = new Main(driver);
+        main.SignInTest();
+
+        Login login = new Login(driver);
+        LandingPage landingPage = new LandingPage(driver);
+        popUp pop = new popUp(driver);
+
+
+        Thread.sleep(3500);
+        login.clickLoginTab();
+        login.setUserName("username");
+        login.setPassword("Jelszo01");
+
+        login.clickOnLoginButton();
+        Thread.sleep(2500);
+        landingPage.clickLogoutButton();
+        String result = pop.getOut();
+
+        Assertions.assertEquals(result, "Terms and conditions");
+    }
+
+
+    }
